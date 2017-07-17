@@ -5,9 +5,11 @@ from django.shortcuts import render
 import sys, jsonpickle
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import CreateTable,Import,Modifica,GetProduct
-
+import CreateTable,Modifica,GetProduct
+import wingdbstub
+#runserver --noreload 8000
 MPaz=" "
+
 
 def Home(request):
     context={}
