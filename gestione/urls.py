@@ -13,6 +13,6 @@ urlpatterns = [
     url('ricercaM',views.LKPMargine),
     url('fe',views.DelFornitore),
     url('logo',views.Logo),
-    url('import',views.ImportData),
+    url('ppp',views.ImportTable),
     url(r'^$',views.Home),
 ]

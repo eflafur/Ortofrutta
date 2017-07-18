@@ -3,6 +3,8 @@ django.setup()
 from gestione.models import Produttore,Settore,Genere,Area,Sito
 from django.db.models import Q
 
+#nuova release salvata
+
 class Produt:
     def put(self,line):
         self.row=line
