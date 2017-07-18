@@ -2,15 +2,46 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
+        $("#acq").val("2000-01-01");
     
+        $("#trpag").val("0");
+        $("#margine").val("0");
+        $("#fatturato").val("0");
+
     $("#reg").click(function(){
       var a=$("#reg option:selected").text();
-    //var a=$("#a5").html();
      Put(a);
     });
+
+    //$("#dl").click(function(){
+        //var option=" ";
+        //option += '<option value="'+ "MIlanO"+ '">' + "MIlANO"  + '</option>';
+        //$("#acq").val("2000-01-01");
+        //$('#ct').html(option);
+        //$("#trpag").val("0");
+        //$("#margine").val("0");
+        //$("#fatturato").val("0");
+
+    //});
+
+
 });
 
-//nuova release salvata
+function Put(item) {
+    $.post(
+            "produttore",
+            //{ csrfmiddlewaretoken: "{{ csrf_token }}"},
+            { vary: item,a2:"insert"},
+            function (result) {
+            //var result= [1, 2, 3, 4, 5];
+            var option=" ";
+            for (var i=0;i<result.length;i++){
+                    option += '<option value="'+ result[i].citta + '">' + result[i].citta  + '</option>';
+                }
+                $('#ct').html(option);
+            });
+    return;
+};
 
 function BonusLevel(data1) {
     $.post(
@@ -38,21 +69,6 @@ function BonusLevel(data1) {
     return;
 };
 
-function Put(item) {
-    $.post(
-            "produttore",
-            //{ csrfmiddlewaretoken: "{{ csrf_token }}"},
-            { var: item,a2:"insert"},
-            function (result) {
-            //var result= [1, 2, 3, 4, 5];
-            var option=" ";
-            for (var i=0;i<result.length;i++){
-                    option += '<option value="'+ result[i].citta + '">' + result[i].citta  + '</option>';
-                }
-                $('#ct').html(option);
-            });
-    return;
-};
 
 function BonusData(item) {
     $.post(

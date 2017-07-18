@@ -11,32 +11,42 @@ import wingdbstub
 #runserver --noreload 8000
 MPaz=" "
 
+H1=0
+H2=0
+
 
 def Home(request):
     context={}
     return render(request,"gestione/base.html",context)
 
 def Produttore(request):
+    global H1
     context={}
     if(request.method=="POST"):
         message=request.POST
         if(message["a2"]=="insert"):
+            H1=1
             el=CreateTable.GetProd()
-            a=message["var"]
+            a=message["vary"]
             res=el.GetCitta(a)            
             return JsonResponse(res,safe=False)
         elif(message['a2']!=""):
+            if(H1!=1):
+                context={}
+                return render(request,"gestione/safe1.html",context)                 
             el=CreateTable.Produt()
             res=el.put(message)
+            H1=0
             if(res==2):
+                H1=0
                 context={}
                 return render(request,"gestione/safe.html",context)            
-            el=CreateTable.GetProd()
-            res=el.GetArticolo() 
-            res1=el.GetArea()
-            prod=el.GetProduttori()
-            context={"items":res,"items1":res1,"items3":prod}
-            return render(request,"gestione/insert.html",context)            
+        el=CreateTable.GetProd()
+        res=el.GetArticolo() 
+        res1=el.GetArea()
+        prod=el.GetProduttori()
+        context={"items":res,"items1":res1,"items3":prod}
+        return render(request,"gestione/insert.html",context)            
         
     if(request.method=="GET"):
         el=CreateTable.GetProd()
@@ -74,11 +84,13 @@ def Articolo(request):
     return render(request,"gestione/settore.html",context)
 
 def MP(request):
+    global H2
     global MPaz
     context={}
     if(request.method=="POST"):
         message=request.POST
         if(message["a2"]=="insert"):
+            H2=1
             el=Modifica.ModProd()
             a=message["var"]
             res=el.GetAll(a)
@@ -99,9 +111,17 @@ def MP(request):
             res[0]['ct']=citta
             return JsonResponse(res,safe=False)            
         elif(message['a2']!="insert"):
+            if(H2!=1):
+                context={}
+                return render(request,"gestione/modify/safe_modifica.html",context)              
+            #if (message['a1']==" "):
+                #context={}
+                #return render(request,"gestione/modify/safe_modifica.html",context)                    
             el=Modifica.ModProd()
             res=el.Change(message)
+            H2=0
             if(res==2):
+                H2=0
                 context={}
                 return render(request,"gestione/modify/safe_modifica.html",context)            
             el=Modifica.ModProd()
@@ -112,6 +132,7 @@ def MP(request):
         el=Modifica.ModProd()
         prod=el.GetProduttori()
         context={"items":prod}
+        H2=0
     return render(request,"gestione/modify/Modifica.html",context)        
         
 def MA(request):
