@@ -5,8 +5,9 @@ from django.shortcuts import render
 import sys, jsonpickle
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core import serializers
-import CreateTable,Modifica,GetProduct
+import CreateTable,Modifica,GetProduct,Import
 import wingdbstub
+#nuova relaease salvata
 #runserver --noreload 8000
 MPaz=" "
 
@@ -207,7 +208,7 @@ def Logo(request):
     context={}
     return render(request,"gestione/logo.html",context)
 
-def ImportData(request):
+def ImportTable(request):
     obj=Import.getTable()
     res=obj.readTable("go")
     context={}
