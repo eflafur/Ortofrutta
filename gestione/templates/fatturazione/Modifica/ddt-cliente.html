@@ -1,0 +1,67 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container  col-md-offset-2">
+   <div class="row">
+        <div class="col-md-8"><h4>Emissione DDT</h4> </div>      
+    </div>
+    </br>
+
+    <div class="row">
+        <div class="col-md-3" id="cl">  
+                <p>Cliente<select class="form-control" id="clientes"></p> 
+                    {% for entry in items %}
+                        <option value="{{entry.azienda}}">{{entry.azienda}}</option>
+                    {%endfor%}
+            </select> 
+        </div>
+          
+       <div class="col-sm-2"> 
+         <button type="submit" class="btn btn-primary" id="btddt">Emetti </button>  
+     </div>
+    </div>
+    </br>
+  
+        <div class=" col-md-9" id="tbf1" >
+            <table id="tablef"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th></th>
+                        <th>Ddt</th>
+                        <th>Cliente</th>
+                        <th>Valore</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="tb6"></tbody>
+            </table>
+        </div>
+          <div class=" col-md-9" id="tbf2" >
+            <table id="tableddt"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Ddt</th>
+                        <th>Articolo</th>
+                        <th>Peso</th>
+                        <th>Colli</th>
+                        <th>Prezzo</th>
+                        <th>Iva</th>
+                        <th>Imponibile</th>
+                        <th>Data</th>
+                        <th>Lotto</th>
+                    </tr>
+                </thead>
+                <tbody id="tb7"></tbody>
+            </table>
+        </div>
+</div>
+
+
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Fatturazione/Modifica/ddt-cliente.js' %}" ></script>
+{% endblock %}

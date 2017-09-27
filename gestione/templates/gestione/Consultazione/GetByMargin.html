@@ -1,0 +1,48 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2">
+    <div class="row">
+        <div class="col-md-8 "><h4>Cerca per Margine</h4> </div>      
+    </div>
+    <br/><br/>
+
+    <div class="row">
+        <div class="col-md-4">        
+            <div class="input-group">
+              <p>Margine Maggiore/Uguale<input type="number" id="margine" class="form-control" name="a3" min="0" ></p>
+            </div>
+        </div>     
+  
+      
+        <div class="col-md-1 ">  
+            <button type="button"  class="btn btn-info " id="bt2">Cerca</button>
+        </div>
+   
+        <div class=" col-md-5 col-md-offset-1" id="idLKP" >
+            <table id="mytable"  class="table  table-hover">
+                <thead>
+                    <tr>
+                        <th>Azienda</th>
+                        <th>Margine</th>
+                        <th>Regione</th>
+                        <th>Citta</th>
+                    </tr>
+                </thead>
+                <tbody id="tb1">
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        
+  
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Consultazione/GetByMargin.js' %}" ></script>
+{% endblock %}

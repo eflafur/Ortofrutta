@@ -1,0 +1,55 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block css%}
+ <link rel="stylesheet" href="{% static 'mbraak-jqTree-1273274/jqtree.css' %}">
+{% endblock %}
+
+{%block insert%}
+
+ <div class="container col-md-offset-2">
+    <div class="row">
+    
+      <div class="col-md-6">
+        <div id="tree1"></div>
+      </div>
+
+
+   <div class="col-md-6 " >
+    <div class="row">
+      <div class="col-md-3" >
+          <div class="btn-group">
+                  <button type="button" class="btn  btn-success" id="ggrapht">Totale</button>
+                  <button type="button" class="btn  btn-success" id="ggraph">Positivi</button>
+          </div>
+      </div>
+    </div>
+    </br>
+    <div class="row">
+      <div id="ps">
+         <div class="col-md-3" >
+            <input type="number" id="peso" class="form-control" name="a10" min="0">
+          </div>
+         <div class="col-md-1" >
+            <button type="submit" class="btn btn-primary" id="go">Invia</button>
+        </div>        
+      </div>        
+    </div>   
+    
+  </div>        
+ </div>
+</div>
+
+<p id="fl">{{el}}</p>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}" ></script>
+  <script src="{% static 'mbraak-jqTree-1273274/tree.jquery.js' %}" ></script>
+  <script src="{% static 'Rimanenza/Consultazione/RGraph.js' %}" ></script>
+
+  
+{% endblock %}
+

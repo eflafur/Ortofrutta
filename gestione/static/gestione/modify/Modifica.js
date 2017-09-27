@@ -2,29 +2,18 @@
 
 $(document).ready(function(){
     $.ajaxSetup({cache:false});
-    
- 
-       
-    
-    
     $("#azienda").click(function(){
-        $("#acq").val("2000-01-01");
-        $("#trpag").val("0");
-        $("#margine").val("0");
-        $("#fatturato").val("0");
       var a=$("#azienda option:selected").text();
-    //var a=$("#a5").html();
-     Put(a);
+      Put(a);
     });
     $("#ct").click(function(){
       var r=$("#ct option:selected").text();
-    //var a=$("#a5").html();
-     PutCitta(r);
+      if(r!="")
+       PutCitta(r);
     });
  $("#aziendadel").click(function(){
       var r=$("#aziendadel option:selected").text();
-    //var a=$("#a5").html();
-     DelFornitore(r);
+      DelFornitore(r);
     });
 
 });
@@ -34,11 +23,6 @@ function Put(item) {
             "mp",
             { var: item,a2:"insert"},
             function (result) {
-         $("#acq").val("2000-01-01");
-        $("#trpag").val("0");
-        $("#margine").val("0");
-        $("#fatturato").val("0");
-            //var result= [1, 2, 3, 4, 5];
             var option=" ";
             var option1=" ";
             var option2=" ";
@@ -47,9 +31,6 @@ function Put(item) {
             for (var i=0;i<result[0].prova.length;i++){
                     option += '<option value="'+ result[0].prova[i].regione+ '">' + result [0].prova[i].regione+ '</option>';
                 }
-            for (var i=0;i<result[0].art.length;i++){
-                option1 += '<option value="'+ result[0].art[i].articolo+ '">' + result [0].art[i].articolo+ '</option>';
-            }
             for (var i=0;i<result[0].ct.length;i++){
                 option2 += '<option value="'+ result[0].ct[i].sito__citta+ '">' + result [0].ct[i].sito__citta+ '</option>';
             }
@@ -57,13 +38,12 @@ function Put(item) {
                 option3 += '<option value="'+ result[i].settore__articolo+ '">' + result [i].settore__articolo+ '</option>';
             }
                 $('#lsart').html(option3);
-                //$('#lsart').val(result[0].citta);
+                $('#lsart').val(result[0].citta);
+                $('#slc').val(result[0].settore__articolo);
                 $('#cct').html(option2);
                 $('#cct').val(result[0].citta);
                 $('#ct').html(option);
                 $('#ct').val(result[0].regione);
-                $('#slc').html(option1);
-                $('#slc').val(result[0].settore__articolo);
                 $('#tel').val(result[0].tel);
                 $('#email').val(result[0].email);
                 $('#acq').val(result[0].acquisizione);
@@ -72,12 +52,7 @@ function Put(item) {
                 $('#trpag').val(result[0].trpag);
                 $('#margine').val(result[0].margine);
                 $('#fatturato').val(result[0].fatturato);
-
-                
-                //$('#reg select').val(result[0].regione);
-
-
-
+                $('#pi').val(result[0].pi);
 
             });
     return;

@@ -1,0 +1,47 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-5">  <div class="row">
+ <div class="row">
+  <div class="col-md-8 col-md-offset-2"><h4>Nuova Fattura</h4> </div>      
+ </div>
+ <br/>
+ 
+ 
+    <div class="row">
+        <div class="col-md-3">        
+            <div class="input-group">
+                <span class="input-group-addon">Azienda </span>    
+                <select class="form-control" name="a2" id="azienda">
+                   {% for entry in items %}
+                       <option value="{{ entry.nome}}">{{ entry.nome}}</option>
+                   {% endfor %}
+                </select>
+            </div>
+        </div>     
+
+        <div class=" col-md-3 col-md-offset-1" id="idLKP">
+            <!--<div class="input-group" >-->
+                <span class="input-group-addon">Tel</span>
+                <label type="text" id="pr" class="form-control" name="a3" >
+            <!--</div>-->
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class=" col-md-3" id="idLKP1">
+            <table id="mytable"  class="table table-hover">
+                <tbody id="tt">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Consultazione/GetProduct.js' %}" ></script>
+{% endblock %}

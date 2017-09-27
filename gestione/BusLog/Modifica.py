@@ -1,7 +1,8 @@
 import django
 django.setup()
-from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza
+from gestione.models import Produttore,Settore,Genere,Area,Sito,Preferenza,Specifica,IDcod,Saldo
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 
 class Produt:
     def put(self,line):
@@ -57,7 +58,7 @@ class ModProd:
     def GetAll(self,line):
         self.row=line
         res=Produttore.objects.filter(Q(azienda=line)).values("azienda","settore__articolo",
-            "contatto","regione","citta","acquisizione","capacita","email","tel","trpag","margine","fatturato")
+            "contatto","regione","citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
         ret=list(res)    
         return ret
     def GetRegione(self):
@@ -78,8 +79,7 @@ class ModProd:
         val1=0
         p=Produttore.objects.get(azienda=self.row["a2"])
         pt=Produttore.objects.filter(Q(azienda=self.row["a2"])).values("settore__articolo","contatto","regione",
-                                    "citta","acquisizione","capacita","email","tel","trpag","margine","fatturato")
-        
+                                    "citta","acquisizione","capacita","email","tel","trpag","margine","fatturato","pi")
         if(pt[0]["contatto"]!=self.row["a3"]):
             val=1
         elif(pt[0]["regione"]!=self.row["a4"]):
@@ -88,8 +88,6 @@ class ModProd:
             val=1
         elif(pt[0]["capacita"]!=self.row["a7"]):
             val=1            
-        #elif(pt[0]["acquisizione"]!=self.row["a6"]):
-            #val=1
         elif(pt[0]["tel"]!=self.row["a9"]):
             val=1
         elif(pt[0]["email"]!=self.row["a8"]):
@@ -100,14 +98,10 @@ class ModProd:
             val=1
         elif(pt[0]["fatturato"]!=int(self.row["a12"])):
             val=1            
-            
-        for item in pt:
-            if(item["settore__articolo"]==self.row["a1"]):
-                val1=1
-                break
-        if ((val==0)&(val1==1)):
+        elif(pt[0]["pi"]!=self.row["a13"]):
+            val=1
+        if (val==0):
             return 2
-            
         if (val==1):
             p.contatto=self.row["a3"]
             p.regione=self.row["a4"]
@@ -119,10 +113,56 @@ class ModProd:
             p.trpag=self.row["a10"]
             p.margine=self.row["a11"]
             p.fatturato=self.row["a12"]
-            
+            p.pi=self.row["a13"]
             p.save()
-        if(val1==0):
-            s=Settore.objects.get(articolo=self.row["a1"])
-            p.settore.add(s)
         return "okey"
+    def AddArticolo(self,azd,art):
+        p=Produttore.objects.get(azienda=azd)
+        s=Settore.objects.get(articolo=art)
+        p.settore.add(s)
+        return
+    def DelArticolo(self,azd,art):
+        p=Produttore.objects.get(azienda=azd)
+        s=Settore.objects.get(articolo=art)
+        p.settore.remove(s)
+        return
+    
+    def ChangeSpec(self,message,cat):
+        try:
+            sp=Specifica.objects.get(nome=cat)
+        except ObjectDoesNotExist:
+            sp=None
+        sttr=Settore.objects.filter()
+        st=sttr.filter(Q(articolo=message["a3"]),  Q(specifica__nome=message["a4"]))
+        if((not sp) & (cat!="")):
+            sp=Specifica(nome=cat)
+            sp.save()
+            st=sttr.get(articolo=message["a3"])
+            sp.settore.add(st)
+        elif ((sp is not None) & (cat!="") & (not st)):
+                st=sttr.get(articolo=message["a3"])
+                sp.settore.add(st)
+        codifica=message["a1"] + "-" + message["a2"] + "-"  + message["a3"] + "-"  + cat 
+        try:
+            c=IDcod.objects.get(cod=codifica)
+        except ObjectDoesNotExist:
+            c=None
+        if (c):
+            return 2
+        p=Produttore.objects.get(azienda=message["a1"])
+        g=Genere.objects.get(nome=message["a2"])
+        st=sttr.get(articolo=message["a3"])
+        if(cat==""):
+            c=IDcod(cod=codifica,genere=g,settore=st,produttore=p)
+        else:
+            sp=Specifica.objects.get(nome=cat)
+            c=IDcod(cod=codifica,genere=g,settore=st,specifica=sp,produttore=p)
+        c.save()
+        c=IDcod.objects.get(cod=codifica)
+        s=Saldo(idcod=c)
+        s.save()
+        return 1
+
+        
+    
         

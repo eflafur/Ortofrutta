@@ -1,0 +1,63 @@
+{% extends 'gestione/layout.html'%}
+{% load static %}
+
+{%block insert%}
+
+<div class="container col-md-offset-2" >
+    <div class="row">
+        <div class="col-md-8 "><h4>Nuovo Codice</h4> </div>      
+    </div>
+    <br/>
+
+    <div class="row">
+        <form class="form-group" action="addart" method="post">
+            <div class="col-md-2">        
+                <div class="input-group">
+                    <p>Azienda<select class="form-control" name="a1" id="azienda"></p>
+                       {% for entry in items %}
+                           <option value="{{ entry.azienda}}">{{ entry.azienda}}</option>
+                       {% endfor %}
+                    </select>
+                </div>
+            </div>  
+            
+            <div class="col-md-2">   
+                <div class="input-group" id="caddgen">
+                   
+                    <p>Genere<select class="form-control" name="a2" id="gen"></p>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-md-2"> 
+                <div class="input-group" id="caddart">
+                    
+                    <p>Articolo<select class="form-control" name="a3" id="art1" ></p>
+                    </select>
+                </div>
+            </div>
+    
+            <div class="col-md-2">   
+                <div class="input-group" id="caddcat">
+                   
+                    <p>Categoria:<input type="text" id="cat" class="form-control" name="a4" list="catls"></p>
+                        <datalist  id="catls">
+                        </datalist>
+                </div>
+            </div>
+    </div>
+        
+    </br> </br>
+    <div class="row">
+        <div class="col-md-3"> 
+            <button type="submit" class="btn btn-primary" id="btn1">Insert</button>  
+        </div>
+    </div>
+        </form>
+</div>
+  
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'gestione/modify/ModificaArt.js' %}" ></script>
+{% endblock %}

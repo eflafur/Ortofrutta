@@ -3,9 +3,6 @@
 {% load static %}
 {%block insert%}
 
-<!--{% for el in item %}-->
- <!--<p> {{el}} </p>-->
-<!--{% endfor %}-->
 
 <!--<ul>-->
     <!--{% for key,value  in item.items %}           -->
@@ -13,32 +10,35 @@
     <!--{% endfor %}    -->
 <!--</ul>-->
 
- <div class="container">
-  <div class="row">
-    <div class="col-md-3"><h2>Crea Articolo</h2>    
-    
-    <p id="result"></p>
-        
-            <form class="form-inline" action="articolo" method="post"> 
+
             
+<div class="container col-md-offset-2">
+    <div class="row">
+        <div class="col-xs-2 "><h4>Crea Articolo</h4> </div>      
+    </div>
+    </br>
+
+    <div class="row">
+        <div class="col-md-3">   
+            <p>Articolo<form class="form-inline" action="articolo" method="post"></p> 
                 <select class="form-control" name="s1" id="slc1">
                     {% for entry in items %}
                         <option value="{{ entry.nome }}">{{ entry.nome}}</option>
                     {% endfor %}
                 </select>
-                <br/><br/>
-                
-                 <input type="text" id="tx1" name="s2" list="s2" >
-                <datalist  id="s2" >
-                </datalist>
-                <br/><br/>
-            
-               
-                
-                <button type="submit" class="btn btn-primary">Insert</button>
-            </form>
         </div>
+        <div class="col-md-2">   
+            <button type="submit" class="btn btn-primary">Insert</button>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-3">   
+        <input type="text" id="tx1" name="s2" list="ss2">
+        <datalist  id="ss2"></datalist>
      </div>
+   </div>
+            </form>
 </div>
 
 {%endblock%}

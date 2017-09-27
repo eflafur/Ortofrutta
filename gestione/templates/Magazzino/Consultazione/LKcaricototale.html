@@ -1,0 +1,52 @@
+
+{% extends 'gestione/layout.html'%}
+{% load static %}
+{%block insert%}
+
+<!--{% for el in item %}-->
+ <!--<p> {{el}} </p>-->
+<!--{% endfor %}-->
+
+<!--<ul>-->
+    <!--{% for key,value  in item.items %}           -->
+            <!--<li> {{key}}: {{value}} </li>-->
+    <!--{% endfor %}    -->
+<!--</ul>-->
+
+ <div class="container col-md-offset-2">
+    <div class="row">
+        <div class="col-md-8 "><h2>Carico Totale</h2> </div>      
+    </div>
+    <br/><br/>
+
+ 
+    <div class="row">
+        <div class="col-md-2">     
+            <div class="input-group" id="cldt22">
+                <p>Data Maggiore di:<input type = "text" id = "dt2"></p>
+            </div>   
+        </div>
+
+         <div class=" col-md-6 col-md-offset-1" id="idLKP" >
+            <table id="mytable"  class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Fornitore</th>
+                        <th>Articolo</th>
+                        <th>Quantita</th>
+                        <th>Bolla</th>
+                        <th>Data Carico</th>
+                    </tr>
+                </thead>
+                <tbody class="tbl" id="tb5"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{%endblock%}
+
+{%block script%}
+  <script src="{% static 'Magazzino/Consultazione/LKcaricototale.js' %}" ></script>
+{% endblock %}
+
