@@ -18,7 +18,6 @@ $(document).ready(function(){
         a=$(this).text();
         window.location.replace("fattura?nome="+a+"&azione=sps");
     });
-    
 });
 
 function GetTable(date){

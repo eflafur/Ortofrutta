@@ -1,10 +1,14 @@
 #import django
 #django.setup()
-from gestione.models import Produttore,IDcod,Carico
-from django.db.models import Q,F
-import os,time,openpyxl,subprocess
+from gestione.models import Produttore,IDcod,Carico,Sospese
+from django.db.models import Q,F,Sum
+import os,time,openpyxl,subprocess,decimal
 
 class GetData:
+    def GetIdCodAll(self):
+        rec=IDcod.objects.all().values("id","cod").order_by("cod")
+        data=list(rec)
+        return data
     def GetIdCod(self,message):
         rec=Carico.objects.filter(Q(idcod__produttore__azienda=message["res"]),Q(data__gte=message["res1"])).values("idcod__cod",
                                 "q","cassa","bolla","data").order_by("bolla")
@@ -15,7 +19,7 @@ class GetData:
         data=list(rec)
         return data    
     def GetBolla(self,line):
-        rec=Carico.objects.filter(Q(bolla=line[0]), Q(idcod__produttore__azienda=line[1])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
+        rec=Carico.objects.filter(Q(bolla=line["bolla"]), Q(idcod__produttore__azienda=line["cliente"])).values("idcod__id","idcod__cod","q","cassa","data","bolla")
         data=list(rec)
         return data 
     def GetIdCodbyProdotto(self,message):
@@ -24,8 +28,11 @@ class GetData:
         data=list(rec)
         return data
     def GetCaricoTotaleCv(self,x):
-        if(x=='t'):
-            rec=Carico.objects.filter(p=0).values("idcod__cod","q","cassa","cassaexit","bolla","data").order_by("data","bolla")
+        rec="";
+        if(x=='p'):
+            rec=Carico.objects.filter(Q(p=0),Q(cassa__gt=F("cassaexit"))).values("idcod__cod","q","cassa","cassaexit","bolla","data").order_by("data","bolla")
+        elif(x=="f"):
+            rec=Carico.objects.filter(p=2).values("idcod__cod","q","cassa","cassaexit","bolla","data").order_by("data","bolla")
         elif(x=="c"):
             rec=self.GetBollaCvT()
         data=list(rec)
@@ -35,10 +42,16 @@ class GetData:
         data=list(rec)
         return data    
     def GetCaricobyIdcod(self):
-        rec=Carico.objects.filter(cassa__gt=F("cassaexit")).values("bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
-        data=list(rec)
-        return data
+        dic={}
+        s=Sospese.objects.values("idcod__cod").annotate(css_sum=Sum("cassa")).exclude(id=158)
+        c=Carico.objects.filter(cassa__gt=F("cassaexit")).values("idcod__id","bolla","id","idcod__cod","cassa","cassaexit").order_by("bolla","data")
+        d1=list(s)
+        dic["sp"]=d1
+        d2=list(c)
+        dic["cr"]=d2
+        return dic
     def GetBollaCv(self,nome):
+        dic={}
         ls=[]
         ls1=[]
         c=Carico.objects.filter(Q(idcod__produttore__azienda=nome),Q(p=0)).order_by("bolla")
@@ -46,78 +59,121 @@ class GetData:
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
             ls.append(item["bolla"])
-        cM1=c.filter(Q(cassa=F("cassaexit"))).values("idcod__id",
-                                   "idcod__cod","q","cassa","data","bolla","costo","idcod__produttore__margine").order_by("bolla")
-        for item in cM1:
+        cm1=c.filter(Q(cassa=F("cassaexit"))).values("id",
+                                   "idcod__cod","q","cassa","data","bolla","costo").order_by("bolla")
+        for item in cm1:
             if(item["bolla"] in ls):
                 continue
             ls1.append(item)
+            
+        frn=Produttore.objects.get(azienda=nome)
+        dic["ct"]=frn.citta
+        dic["pi"]=frn.pi
+        dic["mrg"]=frn.margine
+        dic["rg"]=frn.regione            
+        ls1.append(dic)
         return ls1 
 
     def GetBollaCvT(self):
         ls=[]
         ls1=[]
-        c=Carico.objects.filter(p=0).order_by("bolla")
+        c=Carico.objects.filter(p__lte=1).order_by("bolla")
         cm1=c.filter(Q(cassa__gt=F("cassaexit")))
         cm2=cm1.values("bolla").distinct()
         for  item in cm2:
             ls.append(item["bolla"])
-        cM1=c.filter(Q(cassa=F("cassaexit"))).values("idcod__id",
+        cm11=c.filter(Q(cassa=F("cassaexit"))).values("idcod__id",
                                    "idcod__cod","q","cassa","cassaexit","data","bolla","costo","idcod__produttore__margine").order_by("bolla")
-        for item in cM1:
+        for item in cm11:
             if(item["bolla"] in ls):
                 continue
             ls1.append(item)
         return ls1     
+    #def GetBollaCvP(self):
+        #ls=[]
+        #ls1=[]
+        #c=Carico.objects.filter(p=0).order_by("bolla")
+        #cm1=c.filter(Q(cassa=F("cassaexit")))
+        #cm2=cm1.values("bolla").distinct()
+        #for  item in cm2:
+            #ls.append(item["bolla"])
+        #cM1=c.filter(Q(cassa__gt=F("cassaexit"))).values("idcod__id",
+                                   #"idcod__cod","q","cassa","cassaexit","data","bolla","costo","idcod__produttore__margine").order_by("bolla")
+        #for item in cM1:
+            #if(item["bolla"] in ls):
+                #continue
+            #ls1.append(item)
+        #return ls1     
+
     
     def PushBollaCv(self,line,cln,mrgn):
         ls=[]
         cliente=Produttore.objects.get(azienda=cln)
         ccv=Carico.objects.filter().values("cv").order_by("cv").last()
-        c=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=0)).values("idcod__id",
+        c=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=0)).values("id",
                                    "idcod__cod","q","cassa","data","bolla","costo","idcod__genere__iva").order_by("bolla")
-        f=(ccv["cv"]).split("-")
-        r=int(f[1])+1
-        fatt=f[0]+"-"+str(r)
+        fatt=ccv["cv"]+1
         for item in line:
-            c1=c.filter(bolla=item)
-            for item1 in c1:
-                ddt={}
-                ddt['costo']=float(item1["costo"])*(1-float(mrgn)/100)
-                ddt["cod"]=item1["idcod__cod"]
-                ddt["lotto"]=item1["bolla"]
-                ddt["ps"]=item1["q"]
-                ddt["css"]=item1["cassa"]
-                ddt["iva"]=item1["idcod__genere__iva"]
-                ls.append(ddt)
-            c1.update(p=1,mrg=mrgn,cv=fatt)
+            c1=c.filter(id=item["id"])
+            ddt={}
+            ddt['costo']=item["fatt"]
+            ddt["cod"]=c1[0]["idcod__cod"]
+            ddt["lotto"]=c1[0]["id"]
+            ddt["ps"]=c1[0]["q"]
+            ddt["css"]=c1[0]["cassa"]
+            ddt["iva"]=c1[0]["idcod__genere__iva"]
+            c1.update(fattimp=item["fatt"],mrg=mrgn,p=1,cv=fatt)
+            ls.append(ddt)
         self.stampaFattura("vostra fattura",cliente,ls,mrgn)
         return
     
-    def PushFattFrn(self,line,fatt,frn,mrgn,costo):
+    def PushFattFrn(self,line,ft,frn,mrgn,cst):
         c=Carico.objects.filter(Q(idcod__produttore__azienda=frn),Q(p=1)).order_by("cv")
         for item in line:
             c1=c.filter(cv=item)
-            c1.update(p=2,mrg=mrgn,cv=fatt)
-        self.stampaFattura("vostra fattura",cliente,ls,mrgn)
+            c1.update(p=2,fatt=ft,mrg=mrgn,fattimp=cst)
         return
     
-    
-    def GetCvbyPrd(self,cln):
+    def GetCvbyPrd(self,line):
         dic={}
-        ls=[]
-        rec=Carico.objects.filter(Q(idcod__produttore__azienda=cln),Q(p=1)).values("idcod__cod","q","cassa","data","bolla","costo","cv","mrg")
-#        rec1=rec.values("cv").order_by("cv").distinct()
-        frn=Produttore.objects.get(azienda=cln)
+        rec=Carico.objects.filter(p__gte=1)
+        r1=rec.filter(fatt=line["fatt"])
+        if(r1):
+            return 1
+        r2=rec.filter(Q(idcod__produttore__azienda=line["cln"]),Q(p=1)).values("bolla","cv","mrg","data").order_by("cv").distinct()
+        frn=Produttore.objects.get(azienda=line["cln"])
         dic["ct"]=frn.citta
         dic["pi"]=frn.pi
         dic["mrg"]=frn.margine
         dic["rg"]=frn.regione
-        data=list(rec)
+        data=list(r2)
         data.append(dic)
         return data 
-        
-                
+    
+    def GetCvFatt(self,cvd):
+        rec=Carico.objects.filter(cv=cvd).values("id","idcod__cod","q","cassa","data","costo","bolla","fattimp").order_by("bolla")
+        data=list(rec)
+        return data
+    def SaveCvFatt(self,cvls,ft,frn,mrgg):
+        cst=0
+        res=Carico.objects.filter(Q(p__lte=1),Q(idcod__produttore__azienda=frn))
+        #try:
+            #r=res.get(fatt=ft)
+        #except:
+            #return 1
+        #r=res.filter(fatt=ft)
+        #if (r.exists()):
+            #return 1
+        #else:
+        for item in cvls:
+            rec=res.get(id=item["id"])
+            rec.fattimp=float(item["vnd"])
+            rec.fatt=ft
+            rec.mrg=mrgg
+            rec.p=2
+            rec.save()
+        return 0
+
     def stampaFattura(self,nFattura, cln, righeFattura,mrg):
         """ produce fattura in excel """
         venditore={'venditore': 'Società ORTOFRUTTICOLA', 'P-IVA': "1234567890", 'indirizzo':'via dei Tigli, 8','città':'Milano','telefono':'02555555'}
@@ -156,7 +212,7 @@ class GetData:
             sheet["H"+str(line+cntr)].value = mrg
             subtotale =riga['costo']
             sheet["I"+str(line+cntr)].value = subtotale
-            total+=subtotale
+            total+=float(subtotale)
             cntr+=1
         cntr+=1
         sheet["H"+str(line+cntr)].value = "TOTALE"							

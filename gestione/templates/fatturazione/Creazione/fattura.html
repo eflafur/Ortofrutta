@@ -22,13 +22,14 @@
        </select>
       </div>
      </div>
-
+     </br>
 
       <div class="btn-group">
               <button type="button" class="btn  btn-success" id="btsps">Sospesa</button>
               <button type="button" class="btn  btn-success" id="btems">Fattura</button>
               <button type="button" class="btn  btn-success" id="ddtft">DDT</button>
               <button type="button" class="btn  btn-success" id="btanl">Annulla</button>        
+              <!--<button type="button" class="btn  btn-success" id="btstp">Stampa</button>        -->
       </div>
     </div>
     </br>
@@ -42,7 +43,8 @@
           {% endfor %}
         </select>
        </div>
-      </div>
+      </div> 
+
        <div class="col-md-6">  
        <div class="input-group" id="pgm">
         <p>Termini di pagamento<select class="form-control" name="a6" id="pagam"></p>
@@ -65,11 +67,15 @@
         </select>
        </div>
       </div>
-      <div class="col-md-6">  
+      <div class="col-md-4">  
        <div class="input-group" id="lt">  
        <p> Lotto<select class="form-control" id="lotto"></p>
          </select>
        </div>
+      </div>
+      </br>
+      <div class="col-md-2">  
+        <button type="button" class="btn  btn-success  btn-xs" id="btltsos">Bypass</button>
       </div>
      </div>
      </br>
@@ -92,6 +98,7 @@
       </div>
     </div>
    </div>
+
     </br>
   
    <div class="row">
@@ -99,10 +106,9 @@
        <button type="submit" class="btn btn-primary" id="btadd">Aggiungi </button>  
    </div>
   </div>
-  
  </div>
   
-   <div class=" col-md-6 col-md-offset-1" id="tbf" >
+   <div class=" col-md-7" id="tbf" >
       <table id="mytable"  class="table table-hover">
           <thead id="thd">
               <tr>
@@ -112,6 +118,7 @@
                   <th>Iva</th>
                   <th>Prezzo</th>
                   <th>Imponibile</th>
+                  <th>Lotto</th>
                   <th>Elimina</th>
               </tr>
           </thead>

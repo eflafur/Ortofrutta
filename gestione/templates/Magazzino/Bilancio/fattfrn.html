@@ -24,56 +24,78 @@
         <div class="col-md-2" >  
           <div class="input-group" id="cldt2">
             <p>Margine:<input type = "number" id = "dt2"  class="form-control"></p>
+            <button type="button" class="btn  btn-success btn-sm" id="btmrg">Cambia</button>
           </div>   
         </div>
         <div class="col-md-2" >  
           <div class="input-group" id="cldt6">
-            <p>Importo:<input type = "number" id = "dt6"  class="form-control"></p>
+            <p>Importo:<input type = "number" id = "dt6"  class="form-control" readonly></p>
+            <button type="button" class="btn  btn-success btn-sm" id="btcrc" >Ricalcola</button>
           </div>   
         </div>
+        <div class="col-md-2" >  
+          <div class="input-group" id="cldt7">
+            <p>Saldo:<input type = "number" id = "dt7"  class="form-control" readonly></p>
+          </div>   
+       </div>
     </br>
-        <div class="btn-group">
-            <button type="button" class="btn  btn-success" id="btmrg">Cambia</button>
-            <button type="button" class="btn  btn-success" id="btddt">Emetti</button>
-        </div>
     </div>
   <div class="row">
        <div class="col-md-2" >  
           <div class="input-group" id="cldt3">
-            <p>Citta:<input type = "text" id = "dt3"  class="form-control"></p>
+            <p>Citta:<input type = "text" id = "dt3"  class="form-control" readonly></p>
           </div>   
       </div>
        <div class="col-md-2" >  
           <div class="input-group" id="cldt4">
-            <p>Regione:<input type = "text" id = "dt4"  class="form-control"></p>
+            <p>Regione:<input type = "text" id = "dt4"  class="form-control" readonly></p>
           </div>   
       </div>
        <div class="col-md-3" >  
           <div class="input-group" id="cldt5">
-            <p>P.I.<input type = "text" id = "dt5"  class="form-control"></p>
+            <p>P.I.<input type = "text" id = "dt5"  class="form-control" readonly></p>
           </div>   
-      </div>
+      </div>   
+      </br>
+       <div class="col-md-3 col-md-offset-1" >  
+          <div class="btn-group" id="btcv">
+            <button type="button" class="btn  btn-warning" id="btddt">Emetti</button>
+          </div>
+       </div>
   </div>  
+      </br>
   
      <div class="row">
-        <div class=" col-md-11" id="tbf1" >
+        <div class=" col-md-7" id="tbf1" >
             <table id="tablef"  class="table table-hover">
                 <thead id="thd">
                     <tr>
-                        <th></th>
                         <th>C.V.</th>
                         <th>Bolla</th>
-                        <th>Articolo</th>
-                        <th>Peso</th>
-                        <th>Casse</th>
                         <th>Data</th>
-                        <th>Importo</th>
-                        <th>Netto a Pagare</th>
                     </tr>
                 </thead>
                 <tbody id="tb6"></tbody>
             </table>
         </div>
+        
+        <div class=" col-md-12" id="tbf2" >
+            <table id="tablef2"  class="table table-hover">
+                <thead id="thd">
+                    <tr>
+                        <th>Bolla</th>
+                        <th>Data</th>
+                        <th>Peso</th>
+                       <th>Colli</th>
+                       <th>Articolo</th>
+                       <th>Venduto</th>
+                        <th>Netto a Pagare</th>
+                    </tr>
+                </thead>
+                <tbody id="tb62"></tbody>
+            </table>
+        </div>
+        
     </div>
 </div>
   
